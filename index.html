@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Source Configuration — Sumo Logic</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy-900: #0f1222;
+            --navy-800: #1a1f36;
+            --navy-700: #252b43;
+            --navy-600: #323a54;
+            --navy-500: #4a5272;
+            --blue-600: #006AF6;
+            --blue-500: #1a7fff;
+            --blue-400: #4d9fff;
+            --blue-100: #e8f2ff;
+            --blue-50: #f4f8ff;
+            --green-600: #0d7a3e;
+            --green-100: #e4f5ec;
+            --red-600: #d32f2f;
+            --red-100: #fde8e8;
+            --gray-900: #1a1a2e;
+            --gray-700: #3d3d5c;
+            --gray-500: #6b6b8a;
+            --gray-400: #8e8ea8;
+            --gray-300: #b8b8cc;
+            --gray-200: #dcdce8;
+            --gray-100: #f0f0f6;
+            --gray-50: #f8f8fc;
+            --white: #ffffff;
+            --font-sans: 'IBM Plex Sans', -apple-system, sans-serif;
+            --font-mono: 'IBM Plex Mono', 'SF Mono', monospace;
+            --radius-sm: 4px;
+            --radius-md: 6px;
+            --radius-lg: 8px;
+            --shadow-card: 0 1px 3px rgba(15, 18, 34, 0.06), 0 1px 2px rgba(15, 18, 34, 0.04);
+            --shadow-elevated: 0 4px 16px rgba(15, 18, 34, 0.08), 0 2px 4px rgba(15, 18, 34, 0.04);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-sans);
+            background: var(--gray-100);
+            color: var(--gray-900);
+            font-size: 13px;
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* ========== SIDEBAR ========== */
+        .sidebar {
+            width: 240px;
+            background: var(--navy-800);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 100;
+        }
+
+        .sidebar-logo {
+            padding: 20px 20px 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid var(--navy-700);
+        }
+
+        .sidebar-logo svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        .sidebar-logo-text {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--white);
+            letter-spacing: -0.2px;
+        }
+
+        .sidebar-nav {
+            padding: 16px 12px;
+            flex: 1;
+        }
+
+        .sidebar-section-label {
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--navy-500);
+            padding: 12px 12px 8px;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 12px;
+            border-radius: var(--radius-md);
+            color: var(--gray-300);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .sidebar-item:hover {
+            background: var(--navy-700);
+            color: var(--white);
+        }
+
+        .sidebar-item.active {
+            background: rgba(0, 106, 246, 0.15);
+            color: var(--blue-400);
+        }
+
+        .sidebar-item svg {
+            width: 16px;
+            height: 16px;
+            opacity: 0.7;
+        }
+
+        .sidebar-item.active svg {
+            opacity: 1;
+        }
+
+        /* ========== MAIN CONTENT ========== */
+        .main {
+            margin-left: 240px;
+            flex: 1;
+            min-height: 100vh;
+        }
+
+        .topbar {
+            background: var(--white);
+            border-bottom: 1px solid var(--gray-200);
+            padding: 0 32px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+        }
+
+        .breadcrumb-item {
+            color: var(--gray-500);
+        }
+
+        .breadcrumb-item.current {
+            color: var(--gray-900);
+            font-weight: 500;
+        }
+
+        .breadcrumb-sep {
+            color: var(--gray-300);
+            font-size: 11px;
+        }
+
+        .content-area {
+            padding: 32px;
+            max-width: 860px;
+        }
+
+        .page-header {
+            margin-bottom: 28px;
+        }
+
+        .page-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 4px;
+        }
+
+        .page-description {
+            font-size: 13px;
+            color: var(--gray-500);
+        }
+
+        /* ========== FORM SECTIONS ========== */
+        .form-card {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-card);
+            margin-bottom: 16px;
+        }
+
+        .form-card-header {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--gray-100);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .form-card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .form-card-body {
+            padding: 24px;
+        }
+
+        /* Form fields */
+        .form-field {
+            margin-bottom: 20px;
+        }
+
+        .form-field:last-child {
+            margin-bottom: 0;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--gray-700);
+            margin-bottom: 6px;
+        }
+
+        .form-label .required {
+            color: var(--red-600);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            font-family: var(--font-sans);
+            font-size: 13px;
+            color: var(--gray-900);
+            background: var(--white);
+            transition: border-color 0.15s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--blue-600);
+            box-shadow: 0 0 0 3px rgba(0, 106, 246, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: var(--gray-400);
+        }
+
+        .form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b6b8a' d='M3 4.5L6 7.5 9 4.5'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 32px;
+        }
+
+        /* ========== RADIO GROUP ========== */
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: background 0.1s;
+            margin: 0 -12px;
+        }
+
+        .radio-option:hover {
+            background: var(--gray-50);
+        }
+
+        .radio-option.selected {
+            background: var(--blue-50);
+        }
+
+        .radio-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid var(--gray-300);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: border-color 0.15s;
+        }
+
+        .radio-option.selected .radio-dot {
+            border-color: var(--blue-600);
+        }
+
+        .radio-option.selected .radio-dot::after {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--blue-600);
+        }
+
+        .radio-text {
+            font-size: 13px;
+            color: var(--gray-700);
+        }
+
+        .radio-option.selected .radio-text {
+            color: var(--gray-900);
+            font-weight: 500;
+        }
+
+        /* ========== AI PANEL ========== */
+        .ai-panel {
+            margin-top: 12px;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(0, 106, 246, 0.03) 0%, rgba(99, 66, 255, 0.03) 100%);
+            border: 1px solid rgba(0, 106, 246, 0.12);
+            border-radius: var(--radius-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ai-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--blue-600), #6342ff, var(--blue-600));
+            background-size: 200% 100%;
+            animation: shimmer 3s linear infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .ai-panel-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+
+        .sparkle-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+        }
+
+        .sparkle-icon svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .ai-panel-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .ai-panel-subtitle {
+            font-size: 12px;
+            color: var(--gray-500);
+            margin-bottom: 14px;
+            padding-left: 30px;
+        }
+
+        .ai-textarea {
+            width: 100%;
+            min-height: 110px;
+            padding: 10px 12px;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            font-family: var(--font-mono);
+            font-size: 12px;
+            line-height: 1.7;
+            color: var(--gray-900);
+            background: var(--white);
+            resize: vertical;
+            transition: border-color 0.15s, background 0.15s;
+        }
+
+        .ai-textarea:focus {
+            outline: none;
+            border-color: var(--blue-600);
+            box-shadow: 0 0 0 3px rgba(0, 106, 246, 0.08);
+        }
+
+        .ai-textarea::placeholder {
+            color: var(--gray-400);
+            font-family: var(--font-sans);
+            font-style: normal;
+        }
+
+        .ai-textarea.disabled {
+            background: var(--gray-50);
+            color: var(--gray-500);
+            cursor: not-allowed;
+        }
+
+        .ai-panel-footer {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            margin-top: 14px;
+            gap: 12px;
+        }
+
+        /* ========== BUTTONS ========== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 16px;
+            border-radius: var(--radius-md);
+            font-family: var(--font-sans);
+            font-size: 12px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: all 0.15s;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: var(--blue-600);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: var(--blue-500);
+            box-shadow: 0 2px 8px rgba(0, 106, 246, 0.25);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.97);
+        }
+
+        .btn-primary.disabled {
+            background: var(--gray-200);
+            color: var(--gray-400);
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .btn-primary.disabled:hover {
+            background: var(--gray-200);
+            box-shadow: none;
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--blue-600);
+            padding: 7px 12px;
+        }
+
+        .btn-ghost:hover {
+            background: var(--blue-50);
+        }
+
+        .btn-spinner {
+            width: 12px;
+            height: 12px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: var(--white);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ========== ERROR ========== */
+        .error-banner {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            padding: 10px 12px;
+            background: var(--red-100);
+            border: 1px solid rgba(211, 47, 47, 0.15);
+            border-radius: var(--radius-md);
+            margin-top: 12px;
+        }
+
+        .error-banner svg {
+            width: 14px;
+            height: 14px;
+            flex-shrink: 0;
+            margin-top: 1px;
+            color: var(--red-600);
+        }
+
+        .error-banner-text {
+            font-size: 12px;
+            color: var(--red-600);
+            line-height: 1.5;
+        }
+
+        /* ========== FORMAT LIST ========== */
+        .format-list {
+            margin-top: 12px;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+
+        .format-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 14px;
+            background: var(--white);
+            border-bottom: 1px solid var(--gray-100);
+            transition: background 0.1s;
+        }
+
+        .format-item:hover {
+            background: var(--gray-50);
+        }
+
+        .format-item:last-child {
+            border-bottom: none;
+        }
+
+        .format-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .format-value {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--gray-900);
+        }
+
+        .format-locator {
+            font-size: 11px;
+            color: var(--gray-500);
+        }
+
+        .format-actions {
+            display: flex;
+            gap: 4px;
+        }
+
+        .icon-btn {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-sm);
+            border: none;
+            background: transparent;
+            color: var(--gray-500);
+            cursor: pointer;
+            transition: all 0.1s;
+        }
+
+        .icon-btn:hover {
+            background: var(--gray-100);
+            color: var(--gray-900);
+        }
+
+        .icon-btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .add-format-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 10px;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--blue-600);
+            cursor: pointer;
+            padding: 4px 0;
+        }
+
+        .add-format-link:hover {
+            text-decoration: underline;
+        }
+
+        /* ========== STEP INDICATOR ========== */
+        .steps {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            margin-bottom: 28px;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .step-number {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .step.completed .step-number {
+            background: var(--green-100);
+            color: var(--green-600);
+        }
+
+        .step.active .step-number {
+            background: var(--blue-600);
+            color: var(--white);
+        }
+
+        .step.upcoming .step-number {
+            background: var(--gray-100);
+            color: var(--gray-400);
+        }
+
+        .step-label {
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .step.completed .step-label { color: var(--gray-500); }
+        .step.active .step-label { color: var(--gray-900); }
+        .step.upcoming .step-label { color: var(--gray-400); }
+
+        .step-connector {
+            width: 32px;
+            height: 1px;
+            background: var(--gray-200);
+            margin: 0 12px;
+        }
+
+        /* ========== STATE SWITCHER (demo control) ========== */
+        .demo-controls {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--navy-800);
+            border-radius: var(--radius-lg);
+            padding: 16px 20px;
+            box-shadow: 0 8px 32px rgba(15, 18, 34, 0.3);
+            z-index: 200;
+            min-width: 220px;
+        }
+
+        .demo-controls-title {
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--navy-500);
+            margin-bottom: 10px;
+        }
+
+        .demo-btn {
+            display: block;
+            width: 100%;
+            padding: 7px 10px;
+            margin-bottom: 4px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-sans);
+            font-size: 12px;
+            text-align: left;
+            cursor: pointer;
+            color: var(--gray-300);
+            background: transparent;
+            transition: all 0.1s;
+        }
+
+        .demo-btn:hover {
+            background: var(--navy-700);
+            color: var(--white);
+        }
+
+        .demo-btn.active {
+            background: rgba(0, 106, 246, 0.2);
+            color: var(--blue-400);
+        }
+
+        /* ========== FOOTER ACTIONS ========== */
+        .form-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .btn-secondary {
+            background: var(--white);
+            color: var(--gray-700);
+            border: 1px solid var(--gray-200);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-50);
+            border-color: var(--gray-300);
+        }
+
+        /* ========== ANIMATIONS ========== */
+        .fade-in {
+            animation: fadeIn 0.2s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .panel-hidden {
+            display: none;
+        }
+
+        /* Success badge */
+        .success-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 8px;
+            background: var(--green-100);
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--green-600);
+            margin-top: 12px;
+        }
+
+        .success-badge svg {
+            width: 12px;
+            height: 12px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+    <div class="sidebar-logo">
+        <svg viewBox="0 0 28 28" fill="none">
+            <rect width="28" height="28" rx="6" fill="#006AF6"/>
+            <path d="M8 14.5C8 11.5 10 9 14 9s6 2.5 6 5.5c0 2-1.5 3.5-3.5 3.5-1.2 0-2-.5-2.5-1-.5.5-1.3 1-2.5 1C9.5 18 8 16.5 8 14.5z" fill="white" opacity="0.9"/>
+            <circle cx="14" cy="14" r="1.5" fill="white"/>
+        </svg>
+        <span class="sidebar-logo-text">Sumo Logic</span>
+    </div>
+    <nav class="sidebar-nav">
+        <div class="sidebar-section-label">Manage Data</div>
+        <div class="sidebar-item active">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="2" y="3" width="12" height="10" rx="2"/>
+                <path d="M5 7h6M5 9.5h4"/>
+            </svg>
+            Collection
+        </div>
+        <div class="sidebar-item">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="8" cy="8" r="5.5"/>
+                <path d="M8 5v3l2 1.5"/>
+            </svg>
+            Logs
+        </div>
+        <div class="sidebar-item">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M3 12l3-4 3 2.5 4-6"/>
+            </svg>
+            Metrics
+        </div>
+        <div class="sidebar-section-label">Configuration</div>
+        <div class="sidebar-item">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="8" cy="8" r="2.5"/>
+                <path d="M8 2v2M8 12v2M2 8h2M12 8h2"/>
+            </svg>
+            Settings
+        </div>
+    </nav>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+    <div class="topbar">
+        <div class="breadcrumb">
+            <span class="breadcrumb-item">Collection</span>
+            <span class="breadcrumb-sep">/</span>
+            <span class="breadcrumb-item">Sources</span>
+            <span class="breadcrumb-sep">/</span>
+            <span class="breadcrumb-item current">Configure Source</span>
+        </div>
+    </div>
+
+    <div class="content-area">
+        <div class="page-header">
+            <h1 class="page-title">Configure HTTP Source</h1>
+            <p class="page-description">Set up log collection from your application.</p>
+        </div>
+
+        <!-- Step indicator -->
+        <div class="steps">
+            <div class="step completed">
+                <span class="step-number">
+                    <svg viewBox="0 0 12 12" fill="currentColor" width="12" height="12"><path d="M4.5 8.5L2 6l-.7.7L4.5 9.9l7-7-.7-.7z"/></svg>
+                </span>
+                <span class="step-label">Source Type</span>
+            </div>
+            <div class="step-connector"></div>
+            <div class="step active">
+                <span class="step-number">2</span>
+                <span class="step-label">Configuration</span>
+            </div>
+            <div class="step-connector"></div>
+            <div class="step upcoming">
+                <span class="step-number">3</span>
+                <span class="step-label">Processing Rules</span>
+            </div>
+            <div class="step-connector"></div>
+            <div class="step upcoming">
+                <span class="step-number">4</span>
+                <span class="step-label">Review</span>
+            </div>
+        </div>
+
+        <!-- Source Name -->
+        <div class="form-card">
+            <div class="form-card-body">
+                <div class="form-field">
+                    <label class="form-label">Source Name <span class="required">*</span></label>
+                    <input class="form-input" type="text" value="production-app-logs" />
+                </div>
+                <div class="form-field">
+                    <label class="form-label">Description</label>
+                    <input class="form-input" type="text" placeholder="Optional description for this source" />
+                </div>
+            </div>
+        </div>
+
+        <!-- TIMESTAMP FORMAT SECTION -->
+        <div class="form-card">
+            <div class="form-card-header">
+                <span class="form-card-title">Timestamp Parsing</span>
+            </div>
+            <div class="form-card-body">
+                <div class="form-field">
+                    <label class="form-label">Timestamp Format</label>
+                    <div class="radio-group" id="radioGroup">
+                        <div class="radio-option" data-value="auto" onclick="selectRadio('auto')">
+                            <span class="radio-dot"></span>
+                            <span class="radio-text">Automatically detect the format</span>
+                        </div>
+                        <div class="radio-option" data-value="manual" onclick="selectRadio('manual')">
+                            <span class="radio-dot"></span>
+                            <span class="radio-text">Specify a format</span>
+                        </div>
+                        <div class="radio-option" data-value="ai_suggest" onclick="selectRadio('ai_suggest')">
+                            <span class="radio-dot"></span>
+                            <span class="radio-text">AI suggest from logs</span>
+                        </div>
+                    </div>
+
+                    <!-- AI SUGGEST PANEL -->
+                    <div class="ai-panel panel-hidden fade-in" id="aiPanel">
+                        <div class="ai-panel-header">
+                            <span class="sparkle-icon">
+                                <svg viewBox="0 0 18 18" fill="none">
+                                    <path d="M9 1l1.3 4.2L14.5 6.5l-4.2 1.3L9 12l-1.3-4.2L3.5 6.5l4.2-1.3L9 1z" fill="url(#sparkleGrad)" stroke="url(#sparkleGrad)" stroke-width="0.5"/>
+                                    <path d="M14 10l.7 2.3L17 13l-2.3.7L14 16l-.7-2.3L11 13l2.3-.7L14 10z" fill="url(#sparkleGrad2)" opacity="0.7"/>
+                                    <defs>
+                                        <linearGradient id="sparkleGrad" x1="3" y1="1" x2="15" y2="13">
+                                            <stop stop-color="#006AF6"/>
+                                            <stop offset="1" stop-color="#6342ff"/>
+                                        </linearGradient>
+                                        <linearGradient id="sparkleGrad2" x1="11" y1="10" x2="17" y2="16">
+                                            <stop stop-color="#6342ff"/>
+                                            <stop offset="1" stop-color="#006AF6"/>
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                            </span>
+                            <span class="ai-panel-title">AI Format Suggestion</span>
+                        </div>
+                        <p class="ai-panel-subtitle">Paste sample log lines below and let AI analyze them to suggest the best timestamp format.</p>
+                        <textarea class="ai-textarea" id="aiTextarea" placeholder="Paste 1-5 sample log lines here, one per line..." rows="5" oninput="onTextareaInput()"></textarea>
+                        <div class="error-banner panel-hidden" id="errorBanner">
+                            <svg viewBox="0 0 14 14" fill="currentColor"><path d="M7 0a7 7 0 100 14A7 7 0 007 0zm.5 3.5v4.7h-1V3.5h1zm-.5 6a.75.75 0 110 1.5.75.75 0 010-1.5z"/></svg>
+                            <span class="error-banner-text">The agent could not determine a timestamp format from the provided log lines. Try adding more sample lines or verify that timestamps are present.</span>
+                        </div>
+                        <div class="ai-panel-footer">
+                            <button class="btn btn-primary disabled" id="analyzeBtn" onclick="handleAnalyze()">Analyze Logs</button>
+                        </div>
+                    </div>
+
+                    <!-- FORMAT LIST (success state) -->
+                    <div class="panel-hidden" id="formatPanel">
+                        <div class="format-list fade-in">
+                            <div class="format-item" id="formatItem">
+                                <div class="format-meta">
+                                    <span class="format-value" id="formatValue">MMM dd HH:mm:ss</span>
+                                    <span class="format-locator" id="formatLocator">No locator</span>
+                                </div>
+                                <div class="format-actions">
+                                    <button class="icon-btn" title="Edit">
+                                        <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 10.5V12h1.5l7-7-1.5-1.5-7 7zM10.5 3l1.5 1.5-1 1-1.5-1.5 1-1z"/></svg>
+                                    </button>
+                                    <button class="icon-btn" title="Delete">
+                                        <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 4h8M5.5 4V3h3v1M4.5 4v7.5h5V4"/></svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="add-format-link">
+                            <svg viewBox="0 0 12 12" fill="currentColor" width="12" height="12"><path d="M6 2v8M2 6h8" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+                            Add Timestamp Format
+                        </div>
+                        <div class="success-badge" id="successBadge">
+                            <svg viewBox="0 0 12 12" fill="currentColor"><path d="M4.5 8.5L2 6l-.7.7L4.5 9.9l7-7-.7-.7z"/></svg>
+                            AI suggested
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Timezone -->
+                <div class="form-field" style="margin-top: 20px;">
+                    <label class="form-label">Timezone</label>
+                    <select class="form-input form-select">
+                        <option>Use time zone from log file. If none is present, use UTC.</option>
+                        <option>UTC</option>
+                        <option>America/Los_Angeles</option>
+                        <option>America/New_York</option>
+                        <option>Europe/London</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="form-footer">
+            <button class="btn btn-secondary">Cancel</button>
+            <button class="btn btn-primary">Continue</button>
+        </div>
+    </div>
+</main>
+
+<!-- DEMO STATE CONTROLS -->
+<div class="demo-controls">
+    <div class="demo-controls-title">Demo State</div>
+    <button class="demo-btn" onclick="setState('auto')">1. Auto detect (default)</button>
+    <button class="demo-btn" onclick="setState('ai_empty')">2. AI suggest (empty)</button>
+    <button class="demo-btn" onclick="setState('ai_filled')">3. Logs pasted</button>
+    <button class="demo-btn" onclick="setState('analyzing')">4. Analyzing...</button>
+    <button class="demo-btn" onclick="setState('success')">5. Success</button>
+    <button class="demo-btn" onclick="setState('success_locator')">6. Success (locator)</button>
+    <button class="demo-btn" onclick="setState('error')">7. Error</button>
+</div>
+
+<script>
+    const SAMPLE_LOGS = `Jan 15 14:30:45 myhost app[1234]: request completed in 42ms
+Jan 15 14:31:02 myhost app[1234]: connection timeout to db-replica-3
+Jan 15 14:31:15 myhost app[1234]: retrying request (attempt 2/3)`;
+
+    let currentState = 'auto';
+
+    function selectRadio(value) {
+        document.querySelectorAll('.radio-option').forEach(el => {
+            el.classList.toggle('selected', el.dataset.value === value);
+        });
+
+        document.getElementById('aiPanel').classList.toggle('panel-hidden', value !== 'ai_suggest');
+        document.getElementById('formatPanel').classList.toggle('panel-hidden', value !== 'manual');
+    }
+
+    function onTextareaInput() {
+        const textarea = document.getElementById('aiTextarea');
+        const btn = document.getElementById('analyzeBtn');
+        if (textarea.value.trim()) {
+            btn.classList.remove('disabled');
+        } else {
+            btn.classList.add('disabled');
+        }
+    }
+
+    function handleAnalyze() {
+        setState('analyzing');
+        setTimeout(() => setState('success'), 2500);
+    }
+
+    function setState(state) {
+        currentState = state;
+
+        // Update demo control buttons
+        document.querySelectorAll('.demo-btn').forEach(btn => btn.classList.remove('active'));
+        const btnMap = {
+            'auto': 0, 'ai_empty': 1, 'ai_filled': 2,
+            'analyzing': 3, 'success': 4, 'success_locator': 5, 'error': 6
+        };
+        document.querySelectorAll('.demo-btn')[btnMap[state]]?.classList.add('active');
+
+        const textarea = document.getElementById('aiTextarea');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const errorBanner = document.getElementById('errorBanner');
+        const formatPanel = document.getElementById('formatPanel');
+        const aiPanel = document.getElementById('aiPanel');
+        const formatValue = document.getElementById('formatValue');
+        const formatLocator = document.getElementById('formatLocator');
+        const successBadge = document.getElementById('successBadge');
+
+        // Reset
+        textarea.disabled = false;
+        textarea.classList.remove('disabled');
+        errorBanner.classList.add('panel-hidden');
+        analyzeBtn.innerHTML = 'Analyze Logs';
+
+        switch (state) {
+            case 'auto':
+                selectRadio('auto');
+                textarea.value = '';
+                analyzeBtn.classList.add('disabled');
+                break;
+
+            case 'ai_empty':
+                selectRadio('ai_suggest');
+                textarea.value = '';
+                analyzeBtn.classList.add('disabled');
+                break;
+
+            case 'ai_filled':
+                selectRadio('ai_suggest');
+                textarea.value = SAMPLE_LOGS;
+                analyzeBtn.classList.remove('disabled');
+                break;
+
+            case 'analyzing':
+                selectRadio('ai_suggest');
+                textarea.value = SAMPLE_LOGS;
+                textarea.disabled = true;
+                textarea.classList.add('disabled');
+                analyzeBtn.classList.add('disabled');
+                analyzeBtn.innerHTML = '<span class="btn-spinner"></span> Analyzing...';
+                break;
+
+            case 'success':
+                selectRadio('manual');
+                formatValue.textContent = 'MMM dd HH:mm:ss';
+                formatLocator.textContent = 'No locator';
+                successBadge.style.display = '';
+                break;
+
+            case 'success_locator':
+                selectRadio('manual');
+                formatValue.textContent = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
+                formatLocator.textContent = 'Locator: \\[(.*?)\\]';
+                successBadge.style.display = '';
+                break;
+
+            case 'error':
+                selectRadio('ai_suggest');
+                textarea.value = '[2024-01-15T14:30:45.123Z] INFO handler.go:42 request processing complete';
+                analyzeBtn.classList.remove('disabled');
+                errorBanner.classList.remove('panel-hidden');
+                break;
+        }
+    }
+
+    // Initialize
+    setState('auto');
+</script>
+
+</body>
+</html>
